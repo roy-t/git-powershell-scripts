@@ -10,7 +10,15 @@ function number
     $i = 0;
     foreach($line in $input)
     {
-        [string]$i + ":" + $line
+        $output = [string]$i + ":" + $line
+        if($i % 2 -eq 0)
+        {
+            Write-Host $output -backgroundcolor DarkGray
+        }
+        else
+        {
+            Write-Host $output -backgroundcolor Black   
+        }
         ++$i
     }
 }
@@ -124,6 +132,19 @@ function git-merge-into()
     git pull
     git submodule update
     git merge --no-ff $current
+}
+
+# Deletes all branches that have been merged into HEAD
+function git-prune-branches()
+{    
+    $merged = (git branch --merged)
+    foreach ($branch in $merged)
+    {
+        if (-not $branch.StartsWith("*"))
+        {
+            git branch -d $branch.Trim()
+        }
+    }
 }
 
 # Checkout an exiting branch that matches the search pattern (CheckOut Partial match)
